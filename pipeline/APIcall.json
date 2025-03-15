@@ -1,0 +1,60 @@
+{
+	"name": "APIcall",
+	"properties": {
+		"activities": [
+			{
+				"name": "APIcal",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://jsonplaceholder.typicode.com/posts"
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "APIcal",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/mrhumanoid709@gmail.com/API/APItoJSONRead",
+					"baseParameters": {
+						"APIdata": {
+							"value": "@string(activity('APIcal').output.Response)",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-15T19:32:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
