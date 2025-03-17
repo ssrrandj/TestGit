@@ -2,14 +2,11 @@
 	"name": "RestResource1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Restcallapi",
+			"referenceName": "RestServiceforapi",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "RestResource",
-		"typeProperties": {
-			"relativeUrl": "jsonplaceholder.typicode.com/posts"
-		},
 		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
