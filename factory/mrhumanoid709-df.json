@@ -1,0 +1,9 @@
+{
+	"name": "mrhumanoid709-df",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0c391cee-101b-4263-b173-24efe51ec1d5",
+		"tenantId": "82be9118-7f3f-4490-bd95-10ef5ba7c0cf"
+	}
+}
