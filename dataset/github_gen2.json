@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "github_gen2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "git",
