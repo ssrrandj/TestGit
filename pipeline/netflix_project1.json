@@ -98,12 +98,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "blobstorage",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "netflix_cast1",
-							"file_name": "netflix_cast1.csv"
-						}
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
 					},
 					"timeout": "0.12:00:00",
 					"sleep": 1
