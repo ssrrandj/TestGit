@@ -1,5 +1,5 @@
 {
-	"name": "github_gen2",
+	"name": "git_cont",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "git",
@@ -7,9 +7,6 @@
 		},
 		"parameters": {
 			"file_name": {
-				"type": "string"
-			},
-			"folder_name": {
 				"type": "string"
 			}
 		},
