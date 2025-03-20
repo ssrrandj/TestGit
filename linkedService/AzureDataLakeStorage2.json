@@ -16,7 +16,10 @@
 					"referenceName": "AzureKeyVault1",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "keyvalue2"
+				"secretName": {
+					"value": "@linkedService().secretkeyname",
+					"type": "Expression"
+				}
 			}
 		}
 	}
