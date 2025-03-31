@@ -1,0 +1,157 @@
+{
+    "name": "PipelineWithCheckpoint",
+    "properties": {
+        "activities": [
+            {
+                "name": "GetCheckpointStatus",
+                "type": "Lookup",
+                "dependsOn": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "SqlSource",
+                        "sqlReaderQuery": "SELECT LastFailedActivity FROM CheckpointTable WHERE PipelineName = 'PipelineWithCheckpoint'"
+                    },
+                    "dataset": {
+                        "referenceName": "SQLCheckpointDataset",
+                        "type": "DatasetReference"
+                    }
+                }
+            },
+            {
+                "name": "IfActivityAExecuted",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "GetCheckpointStatus",
+                        "dependencyConditions": ["Succeeded"]
+                    }
+                ],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@equals(activity('GetCheckpointStatus').output.firstRow.LastFailedActivity, 'ActivityA')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [],
+                    "ifFalseActivities": [
+                        {
+                            "name": "ActivityA",
+                            "type": "Copy",
+                            "typeProperties": {
+                                "source": {
+                                    "type": "BlobSource"
+                                },
+                                "sink": {
+                                    "type": "BlobSink"
+                                }
+                            },
+                            "dependsOn": [],
+                            "outputs": [],
+                            "policy": {
+                                "retry": 3,
+                                "timeout": "00:10:00",
+                                "retryIntervalInSeconds": 10
+                            }
+                        },
+                        {
+                            "name": "LogActivityAStatus",
+                            "type": "StoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "ActivityA",
+                                    "dependencyConditions": ["Succeeded", "Failed"]
+                                }
+                            ],
+                            "typeProperties": {
+                                "storedProcedureName": "usp_LogActivityStatus",
+                                "sqlWriterStoredProcedureName": {
+                                    "value": "usp_LogActivityStatus",
+                                    "type": "Expression"
+                                },
+                                "storedProcedureParameters": {
+                                    "PipelineName": {
+                                        "value": "PipelineWithCheckpoint",
+                                        "type": "String"
+                                    },
+                                    "ActivityName": {
+                                        "value": "ActivityA",
+                                        "type": "String"
+                                    },
+                                    "Status": {
+                                        "value": "@activity('ActivityA').Status",
+                                        "type": "String"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "IfActivityBExecuted",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "IfActivityAExecuted",
+                        "dependencyConditions": ["Succeeded"]
+                    }
+                ],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@equals(activity('GetCheckpointStatus').output.firstRow.LastFailedActivity, 'ActivityB')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [],
+                    "ifFalseActivities": [
+                        {
+                            "name": "ActivityB",
+                            "type": "Copy",
+                            "typeProperties": {
+                                "source": {
+                                    "type": "BlobSource"
+                                },
+                                "sink": {
+                                    "type": "BlobSink"
+                                }
+                            },
+                            "dependsOn": [],
+                            "outputs": [],
+                            "policy": {
+                                "retry": 3,
+                                "timeout": "00:10:00",
+                                "retryIntervalInSeconds": 10
+                            }
+                        },
+                        {
+                            "name": "LogActivityBStatus",
+                            "type": "StoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "ActivityB",
+                                    "dependencyConditions": ["Succeeded", "Failed"]
+                                }
+                            ],
+                            "typeProperties": {
+                                "storedProcedureName": "usp_LogActivityStatus",
+                                "storedProcedureParameters": {
+                                    "PipelineName": {
+                                        "value": "PipelineWithCheckpoint",
+                                        "type": "String"
+                                    },
+                                    "ActivityName": {
+                                        "value": "ActivityB",
+                                        "type": "String"
+                                    },
+                                    "Status": {
+                                        "value": "@activity('ActivityB').Status",
+                                        "type": "String"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "annotations": []
+    }
+}
