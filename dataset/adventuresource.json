@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "autoload"
+				"fileName": "AdventureWorks_Calendar.csv",
+				"fileSystem": "browns"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
